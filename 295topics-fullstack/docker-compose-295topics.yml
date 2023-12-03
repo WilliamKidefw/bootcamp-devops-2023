@@ -1,0 +1,73 @@
+version: '3.1'
+
+services:
+
+  mongo-db:
+    container_name: mongo-db
+    image: mongo:7.0.4
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 295topics
+      MONGO_INITDB_ROOT_PASSWORD: 295topics
+    volumes:
+      - ./db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - 295topics-mongodb-data:/data/db
+    networks:
+      - 295topics
+
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express:1.0.0-20-alpine3.18
+    restart: on-failure
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: password
+      ME_CONFIG_MONGODB_ADMINUSERNAME: u295topics
+      ME_CONFIG_MONGODB_ADMINPASSWORD: u295topics
+      ME_CONFIG_MONGODB_URL: mongodb://295topics:295topics@mongo-db:27017
+    networks:
+      - 295topics
+
+  backend:
+    container_name: backend
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: DockerFile.backend
+    environment:
+      - DATABASE_URL=mongodb://295topics:295topics@mongo-db:27017
+      - DATABASE_NAME=TopicstoreDb
+      - HOST=0.0.0.0
+      - PORT=5000
+    ports:
+      - 5000:5000
+    depends_on:
+      - mongo-db
+    networks:
+      - 295topics
+
+  frontend:
+    container_name: frontend
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: DockerFile.frontend
+    environment:
+      - API_URI=http://backend:5000/api/topics
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+    networks:
+      - 295topics
+
+volumes:
+  295topics-mongodb-data:
+
+networks:
+  295topics:
+    name: 295topics-net

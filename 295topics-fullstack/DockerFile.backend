@@ -1,0 +1,30 @@
+FROM node:16-alpine as builder
+LABEL author="williamyataco"
+
+WORKDIR /295topics-fullstack
+
+COPY ./backend/package.json .
+
+RUN npm install
+
+COPY ./backend/. .
+
+RUN npm run prebuild
+RUN npm run build
+
+FROM node:16-alpine
+LABEL author="williamyataco"
+
+ENV NODE_ENV development
+
+WORKDIR /295topics-fullstack
+
+COPY ./backend/package.json ./
+
+RUN npm install
+RUN npm install dotenv --save
+
+COPY --from=builder /295topics-fullstack/dist .
+
+ENTRYPOINT ["node"]
+CMD ["app.js"]

@@ -1,0 +1,24 @@
+FROM node:16-alpine as builder
+LABEL author="williamyataco"
+
+WORKDIR /295topics-fullstack
+
+COPY ./frontend/package.json .
+RUN npm install
+COPY ./frontend/. .
+
+FROM node:16-alpine
+LABEL author="williamyataco"
+
+ENV NODE_ENV production
+
+WORKDIR /295topics-fullstack
+COPY ./frontend/package.json ./
+
+RUN npm install
+
+COPY --from=builder /295topics-fullstack/. .
+
+EXPOSE 3000
+
+CMD ["npm","start"]
