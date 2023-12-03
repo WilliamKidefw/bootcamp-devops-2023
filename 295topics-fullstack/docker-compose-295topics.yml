@@ -35,9 +35,7 @@ services:
   backend:
     container_name: backend
     restart: on-failure
-    build:
-      context: .
-      dockerfile: DockerFile.backend
+    image: wyataco/295topics-backend
     environment:
       - DATABASE_URL=mongodb://295topics:295topics@mongo-db:27017
       - DATABASE_NAME=TopicstoreDb
@@ -53,9 +51,7 @@ services:
   frontend:
     container_name: frontend
     restart: on-failure
-    build:
-      context: .
-      dockerfile: DockerFile.frontend
+    image: wyataco/295topics-frontend
     environment:
       - API_URI=http://backend:5000/api/topics
     ports:
