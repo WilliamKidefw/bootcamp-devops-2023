@@ -10,6 +10,15 @@ TAG_APP_FRONTEND="295topics-frontend"
 
 #stage 1: cloning the repo
 
+if [ "$#" -eq 0 ]
+then
+  echo "No arguments supplied DOCKER_HUB_USERNAME and DOCKER_HUB_PASSWORD"
+  exit 1
+fi
+
+DOCKER_HUB_USERNAME=$1
+DOCKER_HUB_PASSWORD=$2
+
 if [ -d $BC_PROJECT ]; then
 	cd 295devops
 else
@@ -39,14 +48,14 @@ sleep 5
 docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
 sleep 5
 
-docker tag $TAG_APP_BACKEND wyataco/$TAG_APP_BACKEND
+docker tag $TAG_APP_BACKEND $DOCKER_HUB_USERNAME/$TAG_APP_BACKEND
 sleep 2
-docker push wyataco/$TAG_APP_BACKEND
+docker push $DOCKER_HUB_USERNAME/$TAG_APP_BACKEND
 sleep 5
 
-docker tag $TAG_APP_FRONTEND wyataco/$TAG_APP_FRONTEND
+docker tag $TAG_APP_FRONTEND $DOCKER_HUB_USERNAME/$TAG_APP_FRONTEND
 sleep 2
-docker push wyataco/$TAG_APP_FRONTEND
+docker push $DOCKER_HUB_USERNAME/$TAG_APP_FRONTEND
 sleep 5
 
 echo "DEPLOYING CONTAINERS"
@@ -66,6 +75,8 @@ echo "THE APPLICATION IS DESTROYING"
 docker-compose -f docker-compose-295topics.yml -p 295topics down
 docker rmi $TAG_APP_FRONTEND
 docker rmi $TAG_APP_BACKEND
+docker rmi $DOCKER_HUB_USERNAME/$TAG_APP_FRONTEND
+docker rmi $DOCKER_HUB_USERNAME/$TAG_APP_BACKEND
 sleep 5
 
 echo "FINISHED"

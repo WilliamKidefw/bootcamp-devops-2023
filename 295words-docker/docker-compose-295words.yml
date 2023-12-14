@@ -5,9 +5,7 @@ services:
   db:
     container_name: database
     restart: always
-    build:
-      context: .
-      dockerfile: DockerFile.database
+    image: wyataco/295words-db
     ports:
       - 5432:5432
     volumes:
@@ -18,9 +16,7 @@ services:
   api:
     container_name: backend
     restart: on-failure
-    build:
-      context: .
-      dockerfile: DockerFile.backend
+    image: wyataco/295words-api
     ports:
       - 8080:8080
     depends_on:
@@ -31,9 +27,7 @@ services:
   frontend:
     container_name: frontend
     restart: on-failure
-    build:
-      context: .
-      dockerfile: DockerFile.frontend
+    image: wyataco/295words-frontend
     ports:
       - 80:80
     depends_on:
