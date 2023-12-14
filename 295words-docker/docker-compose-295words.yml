@@ -1,0 +1,49 @@
+version: '3.1'
+
+services:
+
+  db:
+    container_name: database
+    restart: always
+    build:
+      context: .
+      dockerfile: DockerFile.database
+    ports:
+      - 5432:5432
+    volumes:
+      - docker-data:/var/lib/postgresql/data
+    networks:
+      - 295words
+
+  api:
+    container_name: backend
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: DockerFile.backend
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    networks:
+      - 295words
+
+  frontend:
+    container_name: frontend
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: DockerFile.frontend
+    ports:
+      - 80:80
+    depends_on:
+      - api
+    networks:
+      - 295words
+
+volumes:
+  docker-data:
+
+networks:
+  295words:
+    name: 295words-net

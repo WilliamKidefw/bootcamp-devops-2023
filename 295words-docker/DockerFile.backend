@@ -1,0 +1,21 @@
+# Use an official Maven image as the base image
+FROM maven:3.8.5-openjdk-18 AS builder
+LABEL author="williamyataco"
+# Set the working directory in the container
+WORKDIR /295words-docker
+# Copy the pom.xml and the project files to the container
+COPY api/pom.xml .
+COPY api/src ./src
+# Build the application using Maven
+RUN mvn clean package -DskipTests
+
+# Use an official Amazon image as the base image
+FROM amazoncorretto:18
+LABEL author="williamyataco"
+# Set the working directory in the container
+WORKDIR /295words-docker
+# Copy the built JAR file from the previous stage to the container
+COPY --from=builder /295words-docker/target/. .
+EXPOSE 8080
+# Set the command to run the application
+CMD ["java", "-jar", "words.jar"]

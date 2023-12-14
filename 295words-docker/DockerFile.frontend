@@ -1,0 +1,22 @@
+# Use an official Golang image as the base image
+FROM golang:alpine AS builder
+LABEL author="williamyataco"
+# Set the working directory in the container
+WORKDIR /295words-docker
+# Copy the go files to the container
+COPY web/*.go .
+# Build the application
+RUN go build -o /go-frontend dispatcher.go
+
+# Use an official Amazon image as the base image
+FROM golang:alpine
+LABEL author="williamyataco"
+# Set the working directory in the container
+WORKDIR /295words-docker
+# Copy the project files to the container
+COPY web/static/ static/
+# Copy the built from the previous stage to the container
+COPY --from=builder /go-frontend /frontend
+EXPOSE 80
+# Set the command to run the application
+ENTRYPOINT ["/frontend"]

@@ -27,7 +27,7 @@ else
 	git checkout $BRANCH_REPO
 fi
 
-#stage 2: Build and Push BackEnd 295fullstack
+#stage 2: Build and Push BackEnd 295topics-fullstack
 cd 295topics-fullstack
 
 docker build -t $TAG_APP_BACKEND -f DockerFile.backend .
@@ -59,6 +59,8 @@ sleep 1
 echo "BUILD AND PUSH script finished"
 docker logout
 sleep 2
+
+sleep 60
 
 echo "THE APPLICATION IS DESTROYING"
 docker-compose -f docker-compose-295topics.yml -p 295topics down

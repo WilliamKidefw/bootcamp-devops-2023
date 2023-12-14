@@ -1,0 +1,10 @@
+# Use an official Postgres image
+FROM postgres:15-alpine
+LABEL author="williamyataco"
+# Set the environments required
+ENV POSTGRES_USER postgres
+ENV POSTGRES_PASSWORD postgres
+# Copy script init database
+COPY db/words.sql /docker-entrypoint-initdb.d/
+
+EXPOSE 5432
