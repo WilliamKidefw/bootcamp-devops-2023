@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres-295devops
+    type: database-295devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+      type: database
+  template:
+    metadata:
+      labels:
+        app: postgres
+        type: database
+    spec:
+      containers:
+        - name: contenedor-postgres
+          image: postgres:15-alpine
+          #imagePullPolicy: Never
+          ports:
+            - name: db-port
+              containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres

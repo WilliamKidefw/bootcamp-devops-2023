@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app: worker-295devops
+    service: app-295devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+      service: app
+  template:
+    metadata:
+      labels:
+        app: worker
+        service: app
+    spec:
+      containers:
+      - name: container-worker-app
+        image: syncd-worker:latest
+        imagePullPolicy: Never
+        ports:
+          - name: port-worker
+            containerPort: 80

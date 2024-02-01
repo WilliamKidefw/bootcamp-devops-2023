@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vote
+  labels:
+    app: vote-295devops
+    service: app-295devops
+spec:
+  type: NodePort
+  ports:
+  - name: service-vote-app
+    port: 5000
+    targetPort: http-api
+  selector:
+    app: vote
+    service: app

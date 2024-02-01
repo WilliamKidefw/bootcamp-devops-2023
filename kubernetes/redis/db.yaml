@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis-295devops
+    type: database-295devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      type: database
+  template:
+    metadata:
+      labels:
+        app: redis
+        type: database
+    spec:
+      containers:
+        - name: contenedor-redis
+          image: redis:alpine
+          #imagePullPolicy: Never
+          ports:
+            - name: redis-db-port
+              containerPort: 6379

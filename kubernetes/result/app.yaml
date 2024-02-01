@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result
+  labels:
+    app: result-295devops
+    service: app-295devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: result
+      service: app
+  template:
+    metadata:
+      labels:
+        app: result
+        service: app
+    spec:
+      containers:
+      - name: container-result-app
+        image: syncd-result:latest
+        imagePullPolicy: Never
+        ports:
+          - name: http-api
+            containerPort: 80

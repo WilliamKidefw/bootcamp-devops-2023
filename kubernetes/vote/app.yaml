@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vote
+  labels:
+    app: vote-295devops
+    service: app-295devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vote
+      service: app
+  template:
+    metadata:
+      labels:
+        app: vote
+        service: app
+    spec:
+      containers:
+      - name: container-vote-app
+        image: syncd-vote:latest
+        imagePullPolicy: Never
+        ports:
+          - name: http-api
+            containerPort: 80
